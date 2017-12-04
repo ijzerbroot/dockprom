@@ -29,11 +29,11 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
-  
+
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
-    volumes: 
+    volumes:
       - ./alertmanager/:/etc/alertmanager/
     command:
       - '-config.file=/etc/alertmanager/config.yml'
@@ -75,7 +75,7 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-      - /cgroup:/cgroup:ro
+  #    - /cgroup:/cgroup:ro
     restart: unless-stopped
     expose:
       - 8080
@@ -83,7 +83,7 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
-  
+
   grafana:
     image: grafana/grafana:4.5.2
     container_name: grafana
@@ -104,6 +104,16 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  eschecker-front:
+    image: nginx:1
+    container_name: eschecker-front
+    volumes:
+      - ../docker-elk/eschecker/web:/usr/share/nginx/html:ro
+    expose:
+      - 80
+    networks:
+      - monitor-net
 
   caddy:
     image: stefanprodan/caddy
